@@ -60,13 +60,15 @@ public class RobotContainer {
     JoystickButton A = new JoystickButton(m_joystick, 1);
     JoystickButton B = new JoystickButton(m_joystick, 2);
 
-    RT.onTrue(Commands.startEnd(() -> shooter.ShooterSpin(controller.getRightTriggerAxis()), () -> shooter.ShooterSpin(0), shooter));
-    RT.onFalse(Commands.startEnd(() -> shooter.StopShooter(), () -> shooter.StopShooter(), shooter));
+    RT.whileTrue(Commands.startEnd(() -> shooter.ShooterSpin(controller.getRightTriggerAxis()), () -> shooter.ShooterSpin(0), shooter));
+    //RT.onFalse(Commands.startEnd(() -> shooter.StopShooter(), () -> shooter.StopShooter(), shooter));
 
-    A.onTrue(Commands.startEnd(() -> feeder.spinFeeder(0.65), () -> feeder.spinFeeder(0), feeder));
+    A.whileTrue(Commands.startEnd(() -> feeder.spinFeeder(0.65), () -> feeder.spinFeeder(0), feeder));
     A.onFalse(Commands.startEnd(() -> feeder.stopFeeder(), () -> feeder.stopFeeder(), feeder));
 
-    B.onTrue(Commands.runOnce(() -> PIDshooter.setSetpoint(5000), PIDshooter));
+    
+    B.whileTrue(Commands.runOnce(() -> PIDshooter.useOutput(0.65, 5000), PIDshooter));
+    PIDshooter.enable();
 
     /* 
     B.onTrue(Commands.startEnd(() -> shooter.ShooterSpin(0.65), () -> shooter.ShooterSpin(0), shooter));
