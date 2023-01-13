@@ -2,16 +2,15 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.Shooter;
 
-import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Shooter;
 
-public class StopShootBall extends CommandBase {
+public class ShootBall extends CommandBase {
   private final Shooter shooter;
-  /** Creates a new StopShootBall. */
-  public StopShootBall(Shooter shooter) {
+  /** Creates a new ShootBall. */
+  public ShootBall(Shooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.shooter = shooter;
     addRequirements(shooter);
@@ -24,7 +23,7 @@ public class StopShootBall extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.StopShooter();
+    shooter.ShooterSpin(.65);
   }
 
   // Called once the command ends or is interrupted.
