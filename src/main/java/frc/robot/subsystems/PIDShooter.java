@@ -5,19 +5,43 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj.Encoder;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 public class PIDShooter extends PIDSubsystem {
+  private final TalonFX BackShooter = new TalonFX(7);
+  //PIDController pid;
+
+  //private final SimpleMotorFeedforward m_shooterFeedForward = new SimpleMotorFeedforward(getMeasurement(), getSetpoint());
+
   /** Creates a new PIDShooter. */
   public PIDShooter() {
+    
     super(
         // The PIDController used by the subsystem
-        new PIDController(0, 0, 0));
+         new PIDController(0, 0, 0));
+
+         BackShooter.setInverted(true);
+         BackShooter.setNeutralMode(NeutralMode.Coast);
   }
 
   @Override
-  public void useOutput(double output, double setpoint) {
+  public void periodic() {
+      super.periodic();
+  }
+
+  @Override
+  public void useOutput(double output, double setpoint) {//setpoint: target position; output: power/speed required
     // Use the output here
+    //BackShooter.set(TalonFXControlMode.PercentOutput, output);
+
+    BackShooter.set(TalonFXControlMode.PercentOutput, output);
+    // m_shooterMotor.setVoltage(output + m_shooterFeedforward.calculate(setpoint));
   }
 
   @Override

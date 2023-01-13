@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.Feeder.FeedBall;
 import frc.robot.commands.Feeder.FeederControlledByJoystick;
 import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.PIDShooter;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -28,6 +29,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Feeder feeder = new Feeder();
   private final Shooter shooter = new Shooter();
+  private final PIDShooter PIDshooter = new PIDShooter();
 
   private final XboxController m_joystick = new XboxController(1);
 
@@ -56,6 +58,7 @@ public class RobotContainer {
     
     Trigger RT = controller.axisGreaterThan(3, 0);
     JoystickButton A = new JoystickButton(m_joystick, 1);
+    JoystickButton B = new JoystickButton(m_joystick, 2);
 
     RT.onTrue(Commands.startEnd(() -> shooter.ShooterSpin(controller.getRightTriggerAxis()), () -> shooter.ShooterSpin(0), shooter));
     RT.onFalse(Commands.startEnd(() -> shooter.StopShooter(), () -> shooter.StopShooter(), shooter));
@@ -63,6 +66,7 @@ public class RobotContainer {
     A.onTrue(Commands.startEnd(() -> feeder.spinFeeder(0.65), () -> feeder.spinFeeder(0), feeder));
     A.onFalse(Commands.startEnd(() -> feeder.stopFeeder(), () -> feeder.stopFeeder(), feeder));
 
+    B.onTrue(Commands.runOnce(() -> PIDshooter.setSetpoint(5000), PIDshooter));
 
     /* 
     B.onTrue(Commands.startEnd(() -> shooter.ShooterSpin(0.65), () -> shooter.ShooterSpin(0), shooter));
