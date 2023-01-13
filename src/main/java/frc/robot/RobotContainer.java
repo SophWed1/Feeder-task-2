@@ -4,15 +4,18 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.AnalogTrigger;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.FeederControlledByJoystick;
 import frc.robot.commands.Feeder.FeedBall;
+import frc.robot.commands.Feeder.FeederControlledByJoystick;
 import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -24,21 +27,17 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Feeder feeder = new Feeder();
-  private final FeedBall feedball = new FeedBall(feeder);
+  private final Shooter shooter = new Shooter();
 
+  private final XboxController m_joystick = new XboxController(1);
 
-  private CommandXboxController controller = new CommandXboxController(3);
+  private CommandXboxController controller = new CommandXboxController(1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    feeder.setDefaultCommand(new FeederControlledByJoystick(feeder, () -> controller.getLeftX())); //TODO make this like 8.0
-    Commands.startEnd( // for feeder 
-      () -> feeder.spinFeeder(.5),
-      () -> feeder.stopFeeder(),
-      feeder
-      );
+    //feeder.setDefaultCommand(new FeederControlledByJoystick(feeder, () -> controller.getLeftX())); //TODO make this like 8.0
   }
 
   /**
@@ -48,8 +47,27 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    /* 
     Trigger aButton = controller.a();
     aButton.whileTrue(new FeedBall(feeder));
+    */
+
+    //JoystickButton B = new JoystickButton(m_joystick, 2);
+    
+    Trigger RT = controller.axisGreaterThan(3, 0);
+    JoystickButton A = new JoystickButton(m_joystick, 1);
+
+    RT.onTrue(Commands.startEnd(() -> shooter.ShooterSpin(controller.getRightTriggerAxis()), () -> shooter.ShooterSpin(0), shooter));
+    RT.onFalse(Commands.startEnd(() -> shooter.StopShooter(), () -> shooter.StopShooter(), shooter));
+
+    A.onTrue(Commands.startEnd(() -> feeder.spinFeeder(0.65), () -> feeder.spinFeeder(0), feeder));
+    A.onFalse(Commands.startEnd(() -> feeder.stopFeeder(), () -> feeder.stopFeeder(), feeder));
+
+
+    /* 
+    B.onTrue(Commands.startEnd(() -> shooter.ShooterSpin(0.65), () -> shooter.ShooterSpin(0), shooter));
+    B.onFalse(Commands.startEnd(() -> shooter.StopShooter(), () -> shooter.StopShooter(), shooter));
+    */
 
   }
 
