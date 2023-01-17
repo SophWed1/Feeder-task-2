@@ -53,6 +53,9 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
+    m_robotContainer.PIDshooter.resetEncoders();
+    m_robotContainer.PIDshooter.enable();
+
   }
 
   @Override

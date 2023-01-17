@@ -29,7 +29,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Feeder feeder = new Feeder();
   private final Shooter shooter = new Shooter();
-  private final PIDShooter PIDshooter = new PIDShooter();
+  final PIDShooter PIDshooter = new PIDShooter();
 
   private final XboxController m_joystick = new XboxController(1);
 
@@ -66,9 +66,8 @@ public class RobotContainer {
     A.whileTrue(Commands.startEnd(() -> feeder.spinFeeder(0.65), () -> feeder.spinFeeder(0), feeder));
     A.onFalse(Commands.startEnd(() -> feeder.stopFeeder(), () -> feeder.stopFeeder(), feeder));
 
-    
     B.whileTrue(Commands.runOnce(() -> PIDshooter.useOutput(0.65, 5000), PIDshooter));
-    PIDshooter.enable();
+    //PIDshooter.enable();
 
     /* 
     B.onTrue(Commands.startEnd(() -> shooter.ShooterSpin(0.65), () -> shooter.ShooterSpin(0), shooter));
